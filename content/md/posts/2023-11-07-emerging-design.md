@@ -3,10 +3,10 @@
  :tags ["design"]}
 
 I'm a big fan of emerging design.  Instead of doing a "big design up front"
-(or _BDUP_ in short), we design the application as we go along.  So actually,
+(or _BDUF_ in short), we design the application as we go along.  So actually,
 no design?  No, not really.  There is some global vision as to where we want
 to go, of course.  But we don't go into the details all that much.  Why?
-Because I think that the BDUP always ends up with a _wrong_ design.  Sometimes
+Because I think that the BDUF always ends up with a _wrong_ design.  Sometimes
 due to changing requirements, but more because it's just impossible to know
 everything beforehand, even if you think about it really hard (and long).
 
