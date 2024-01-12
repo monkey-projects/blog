@@ -7,7 +7,7 @@
 
 (def build-site
   {:name "Build website files"
-   :container/image "docker.io/clojure:temurin-21-tools-deps-alpine"
+   :container/image "docker.io/clojure:temurin-21-tools-deps-bookworm-slim"
    :script ["clojure -M:build"]})
 
 (def private-key (fs/expand-home "~/privkey"))
