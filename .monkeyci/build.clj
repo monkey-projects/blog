@@ -6,20 +6,22 @@
              [shell :as s]]))
 
 (def build-site
-  {:name "Build website files"
-   :container/image "docker.io/clojure:temurin-21-tools-deps-bookworm-slim"
-   :script ["clojure -M:build"]})
+  (c/container-job
+   "build-site"
+   {:container/image "docker.io/clojure:temurin-21-tools-deps-bookworm-slim"
+    :script ["clojure -M:build"]}))
 
-(def private-key (fs/expand-home "~/privkey"))
+(def private-key "privkey")
+(def private-key-artifact
+  {:id "privkey"
+   :path private-key})
 
 (def get-privkey
-  {:name "Download private key"
-   :action (fn [ctx]
-             (s/param-to-file ctx "host-private-key" private-key))})
-
-(def privkey-permissions
-  {:name "Set private key permissions"
-   :action (s/bash (str "chmod 600 " private-key))})
+  (c/action-job
+   "priv-key"
+   (fn [ctx]
+     (s/param-to-file ctx "host-private-key" private-key))
+   {:save-artifacts [private-key-artifact]}))
 
 (def ssh-dir "/root/.ssh")
 (def privkey-remote (str ssh-dir "/id_rsa"))
@@ -31,18 +33,18 @@
   (let [fingerprint (-> ctx
                         (api/build-params)
                         (get "host-fingerprint"))]
-    {:name "Deploy site"
-     :container/image "docker.io/alpine:latest"
-     :container/mounts [[private-key privkey-remote]]
-     :script ["apk update"
-              "apk add rsync openssh-client-default"
-              (format "echo '%s ssh-ed25519 %s' > %s/known_hosts" host fingerprint ssh-dir)
-              (format "rsync -mir public/blog/ monkeyci@%s:/var/www/html/monkeyci/blog" host)]}))
+    (c/container-job
+     "deploy-site"
+     {:container/image "docker.io/alpine:latest"
+      :script ["apk update"
+               "apk add rsync openssh-client-default"
+               (format "mv %s %s" privkey privkey-remote)
+               (format "chown %s 600" privkey-remote)
+               (format "echo '%s ssh-ed25519 %s' > %s/known_hosts" host fingerprint ssh-dir)
+               (format "rsync -mir public/blog/ monkeyci@%s:/var/www/html/monkeyci/blog" host)]
+      :restore-artifacts [private-key-artifact]
+      :dependencies ["priv-key" "build-site"]})))
 
-(c/defpipeline build-and-deploy
-  [build-site
-   get-privkey
-   privkey-permissions
-   deploy])
-
-[build-and-deploy]
+[build-site
+ get-privkey
+ deploy]
