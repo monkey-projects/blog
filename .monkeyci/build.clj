@@ -32,7 +32,6 @@
                (format "chown %s 600" privkey-remote)
                (format "echo '%s ssh-ed25519 %s' > %s/known_hosts" host fingerprint ssh-dir)
                (format "rsync -mir public/blog/ monkeyci@%s:/var/www/html/monkeyci/blog" host)]
-      :restore-artifacts [private-key-artifact]
       :dependencies ["priv-key" "build-site"]})))
 
 [build-site
