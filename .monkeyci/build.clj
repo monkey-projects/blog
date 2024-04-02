@@ -5,11 +5,16 @@
              [core :as c]
              [shell :as s]]))
 
+(def site-artifact
+  {:id "site"
+   :path "public/blog"})
+
 (def build-site
   (c/container-job
    "build-site"
    {:container/image "docker.io/clojure:temurin-21-tools-deps-bookworm-slim"
-    :script ["clojure -M:build"]}))
+    :script ["clojure -M:build"]
+    :save-artifacts [site-artifact]}))
 
 (def ssh-dir "/root/.ssh")
 (def privkey-remote (str ssh-dir "/id_rsa"))
@@ -32,7 +37,8 @@
                (format "chown %s 600" privkey-remote)
                (format "echo '%s ssh-ed25519 %s' > %s/known_hosts" host fingerprint ssh-dir)
                (format "rsync -mir public/blog/ monkeyci@%s:/var/www/html/monkeyci/blog" host)]
-      :dependencies ["priv-key" "build-site"]})))
+      :restore-artifacts [site-artifact]
+      :dependencies ["build-site"]})))
 
 [build-site
  deploy]
