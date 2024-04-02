@@ -38,7 +38,7 @@
      {:container/image "docker.io/alpine:latest"
       :script ["apk update"
                "apk add rsync openssh-client-default"
-               (format "mv %s %s" privkey privkey-remote)
+               (format "mv %s %s" private-key privkey-remote)
                (format "chown %s 600" privkey-remote)
                (format "echo '%s ssh-ed25519 %s' > %s/known_hosts" host fingerprint ssh-dir)
                (format "rsync -mir public/blog/ monkeyci@%s:/var/www/html/monkeyci/blog" host)]
