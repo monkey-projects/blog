@@ -33,6 +33,7 @@
       :container/env {pk-var privkey}
       :script ["apk update"
                "apk add rsync openssh-client-default"
+               (format "mkdir -p %s" ssh-dir)
                (format "echo $%s > %s" pk-var privkey-remote)
                (format "chown %s 600" privkey-remote)
                (format "echo '%s ssh-ed25519 %s' > %s/known_hosts" host fingerprint ssh-dir)
