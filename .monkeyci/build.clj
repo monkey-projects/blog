@@ -12,7 +12,8 @@
       (m/save-artifacts [site-artifact])))
 
 (def image
-  (pk/image-job {:target-img "fra.ocir.io/frjdhmocn5qi/monkeyprojects/blog:"
+  ;; TODO Version
+  (pk/image-job {:target-img "fra.ocir.io/frjdhmocn5qi/monkeyprojects/blog:latest"
                  :arch :amd
                  :job-id "image"
                  :container-opts {:dependencies ["build-site"]
