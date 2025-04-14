@@ -25,3 +25,14 @@
 
       (testing "depends on build-site"
         (is (= ["build-site"] (:dependencies job)))))))
+
+(deftest get-version
+  (testing "`latest` if main branch"
+    (is (= "latest" (-> mt/test-ctx
+                        (mt/with-git-ref "refs/heads/main")
+                        (sut/get-version)))))
+
+  (testing "tag if tag given"
+    (is (= "1.2.3" (-> mt/test-ctx
+                       (mt/with-git-ref "refs/tags/1.2.3")
+                       (sut/get-version))))))

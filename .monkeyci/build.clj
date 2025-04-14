@@ -11,13 +11,16 @@
       (m/script ["clojure -M:build"])
       (m/save-artifacts [site-artifact])))
 
-(def image
-  ;; TODO Version
-  (pk/image-job {:target-img "fra.ocir.io/frjdhmocn5qi/monkeyprojects/blog:latest"
-                 :arch :amd
-                 :job-id "image"
-                 :container-opts {:dependencies ["build-site"]
-                                  :restore-artifacts [site-artifact]}}))
+(defn get-version [ctx]
+  (or (m/tag ctx) "latest"))
+
+(defn image [ctx]
+  ((pk/image-job {:target-img (str "fra.ocir.io/frjdhmocn5qi/monkeyprojects/blog:" (get-version ctx))
+                  :arch :amd
+                  :job-id "image"
+                  :container-opts {:dependencies ["build-site"]
+                                   :restore-artifacts [site-artifact]}})
+   ctx))
 
 (def jobs
   [build-site
