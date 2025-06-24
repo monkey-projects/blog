@@ -15,12 +15,12 @@
   (or (m/tag ctx) "latest"))
 
 (defn image [ctx]
-  ((pk/image-job {:target-img (str "fra.ocir.io/frjdhmocn5qi/monkeyprojects/blog:" (get-version ctx))
-                  :arch :amd
-                  :job-id "image"
-                  :container-opts {:dependencies ["build-site"]
-                                   :restore-artifacts [site-artifact]}})
-   ctx))
+  (pk/image {:target-img (str "rg.fr-par.scw.cloud/monkey-projects/blog:" (get-version ctx))
+             :arch :amd
+             :job-id "image"
+             :container-opts {:dependencies ["build-site"]
+                              :restore-artifacts [site-artifact]}})
+  ctx)
 
 (def jobs
   [build-site
