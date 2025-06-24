@@ -19,8 +19,8 @@
              :arch :amd
              :job-id "image"
              :container-opts {:dependencies ["build-site"]
-                              :restore-artifacts [site-artifact]}})
-  ctx)
+                              :restore-artifacts [site-artifact]}}
+            ctx))
 
 (def jobs
   [build-site
