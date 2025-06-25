@@ -12,7 +12,7 @@
       (m/save-artifacts [site-artifact])))
 
 (defn get-version [ctx]
-  (or (m/tag ctx) "latest"))
+  (or (m/tag ctx) (m/build-id ctx) "latest"))
 
 (defn image [ctx]
   (pk/image {:target-img (str "rg.fr-par.scw.cloud/monkey-projects/blog:" (get-version ctx))
