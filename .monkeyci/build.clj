@@ -22,6 +22,14 @@
                               :restore-artifacts [site-artifact]}}
             ctx))
 
+(def log-creds
+  (bc/action-job
+   "log-credits"
+   (fn [ctx]
+     (let [creds (get (m/build-params ctx) "dockerhub-creds")]
+       (println "Credits:" creds)))))
+
 (def jobs
   [build-site
-   image])
+   image
+   log-creds])
