@@ -23,7 +23,7 @@
             ctx))
 
 (def log-creds
-  (bc/action-job
+  (m/action-job
    "log-credits"
    (fn [ctx]
      (let [creds (get (m/build-params ctx) "dockerhub-creds")]
