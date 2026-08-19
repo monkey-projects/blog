@@ -1,5 +1,5 @@
 (ns build
-  (:require [monkey.ci.build.v2 :as m]
+  (:require [monkey.ci.api :as m]
             [monkey.ci.plugin.kaniko :as pk]))
 
 (def site-artifact
@@ -7,7 +7,7 @@
 
 (def build-site
   (-> (m/container-job "build-site")
-      (m/image "docker.io/clojure:temurin-23-tools-deps-bookworm-slim")
+      (m/image "docker.io/clojure:tools-deps-trixie-slim")
       (m/script ["clojure -M:build"])
       (m/save-artifacts [site-artifact])))
 
